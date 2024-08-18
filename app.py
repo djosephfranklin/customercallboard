@@ -272,7 +272,7 @@ def update_components(n_clicks, n_intervals):
     if n_intervals is not None:
         if progress_value >= 100:
             return True, 0, progress_value, "Analysis Complete", None  # Disable interval and show completion message
-        progress_value += 10  # Update progress value
+        progress_value += 1  # Update progress value
         return False, n_intervals, progress_value, "Processing...", None
 
     return dash.no_update, dash.no_update, dash.no_update, dash.no_update, dash.no_update
@@ -479,6 +479,22 @@ def analyze_call_logs_main(flow):
     print("\n\n#################################################\n\n")
     print("Generating.....\n\n")
     return generate(test_text)
+
+def score(scoreValue):
+    score = int(scoreValue.strip('%'))
+    scoreValue = score
+    fig = go.Figure(go.Indicator(
+        domain = {'x': [0, 1], 'y': [0, 1]},
+        value = scoreValue,
+        mode = "gauge+number+delta",
+        title = {'text': "Enforcement Score"},
+        gauge = {'axis': {'range': [None, 100]},
+                 'steps' : [
+                     {'range': [0, 40], 'color': "green"},
+                     {'range': [40, 60], 'color': "yellow"},
+                 {'range': [60, 100], 'color': "red"}],
+                 'threshold' : {'line': {'color': "red", 'width': 4}, 'thickness': 0.75, 'value': scoreValue}}))
+    return fig
 
 if __name__ == '__main__':
     app.run_server(debug=True)
