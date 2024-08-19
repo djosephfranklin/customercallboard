@@ -11,7 +11,6 @@ import materialdashboard as md
 import dash_ag_grid as dag
 from dash import callback, ctx
 from dash.dependencies import Input, Output, State, ALL
-from PIL import Image
 import openai
 import plotly.graph_objects as go
 
@@ -257,7 +256,7 @@ controls = dbc.InputGroup(
 )
 
 
-def _make_grid_item(size: int) -> md.Grid:
+def _make_grid_item(size) -> md.Grid:
     return md.Grid(
         # Children components should have the `item=True` attribute.
         item=True,
@@ -265,8 +264,8 @@ def _make_grid_item(size: int) -> md.Grid:
         # The size for each screen size can be set, or some can be left unspecified.
         # In this case, only `xs` is used, which means that the layout will always be the same, independently of the
         # screen size (hence will be unresponsive).
-        xs=size,
-        children=[_make_paper_item(f"Size {size}")],
+        xs=3,
+        children=[_make_paper_item(f"{size[0]}", size[1])],
     )
 
 
@@ -283,9 +282,9 @@ def _customer_view(text: str) -> md.Paper:
     )
 
 
-def _make_paper_item(text: str) -> md.Paper:
+def _make_paper_item(text: str, img) -> md.Paper:
     print(text)
-    if text == "Size 3":
+    if True:
         '''
         <Box sx={{ position: 'relative', display: 'inline-flex' }}>
       <CircularProgress variant="determinate" {...props} />
@@ -310,32 +309,15 @@ def _make_paper_item(text: str) -> md.Paper:
         return md.Paper(
             children=[md.Box(style={'position': 'relative', 'display': 'inline-flex'},
                              children=[
-                                 md.Typography("Total Customers, Potential Leads, Missed Leads, Fulfilled"),
+                                 md.Typography(text.split(":")[0], variant="h6"),
                                  #md.CircularProgress(variant="determinate", size="8rem", value=80, color="primary"),
-                                 md.Box(
-                                     style={
-                                         'top': 0,
-                                         'left': 0,
-                                         'bottom': 0,
-                                         'right': 0,
-                                         'position': 'absolute',
-                                         'display': 'flex',
-                                         'alignItems': 'center',
-                                         'justifyContent': 'center',
-                                     },
-                                     children=[
 
-                                         md.Icon(className="bi bi-telephone-fill",
-                                                 style={
-                                                     'width': '2em',
-                                                     'height': '2em',
-                                                     'font-size': '2rem'
-                                                 }),
-                                     ]
-                                 ),
                                  ],
                              ),
-                      md.Typography("201, 50, 10, 40"),
+                      md.Typography(text.split(":")[1], variant="h4"),
+                      md.Box(style={'position': 'relative', 'display': 'inline-flex', 'height':'30%', 'width':'30%'},
+                             children=[img])
+
                       ],
             style={
 
@@ -357,6 +339,10 @@ def _make_paper_item(text: str) -> md.Paper:
         },
     )
 
+total_customer_img = dash.html.Img(src=app.get_asset_url("total-number-of-users.png"))
+potential_leads_img = dash.html.Img(src=app.get_asset_url("leads.png"))
+missed_leads_img = dash.html.Img(src=app.get_asset_url("missed.svg"))
+fullfiled_img = dash.html.Img(src=app.get_asset_url("fulfill.png"))
 
 app.layout = dbc.Container(
     fluid=True,
@@ -402,7 +388,7 @@ app.layout = dbc.Container(
                     # Row and column spacing can be set independently, or the `spacing` attribute can be used to set both.
                     rowSpacing=2,
                     columnSpacing=2,
-                    children=[_make_grid_item(s) for s in [3,3,3, 3]]
+                    children=[_make_grid_item(s) for s in [("Total Customers:210",total_customer_img), ("Potential Leads:30",potential_leads_img), ("Missed Leads:10",missed_leads_img), ("Fulfilled:10",fullfiled_img)]]
 
                 ),
                 md.Paper(
