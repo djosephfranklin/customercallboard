@@ -57,11 +57,14 @@ safety_settings = {
 
 @callback(
     Output("dialog", "open"),
-    Input({"type":"viewdetail", "index":ALL}, "n_clicks"),
+    [Input({"type":"viewdetail", "index":ALL}, "n_clicks"),
+     Input("close", "n_clicks")]
 )
-def dialogopen(n_click):
+def dialogopen(n_click, n_click_2):
     if isinstance(ctx.triggered_id, dict) and ctx.triggered_id["type"] == "viewdetail":
         return True
+    elif isinstance(ctx.triggered_id, str) and ctx.triggered_id == "close":
+        return False
     else:
         return False
 @callback(
@@ -1098,7 +1101,10 @@ dbc.Container(
         dcc.Store(id="store-conversation", data="")
     ],
 )
-                      ])]
+                      ]),
+                      md.DialogActions(
+                        md.Button("Close", id="close")
+                      )]
 
         )
 
