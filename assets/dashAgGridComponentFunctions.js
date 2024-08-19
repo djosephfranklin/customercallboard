@@ -112,8 +112,10 @@ dagcomponentfuncs.CheckboxRenderer = function (props) {
         ),
     ]);
 };
-function onRowSelected(event){
-  console.log(event);
-  console.log(event.node.selected);
-  console.log(event.rowIndex);
+function ImageRenderer(params) {
+    // Create a button element
+    var button = document.createElement('button');
+    button.className = 'btn btn-primary play-btn';
+    button.innerText = 'Play';
+    return button;
 }
