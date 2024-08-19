@@ -13,8 +13,10 @@ faker = Faker()
 # Pre-defined values
 countries = ["sg", "it", "fr", "us", "de", "au", "jp", "in", "cn", "br"]
 quick_hints = ["Buy-1", "Buy-8", "Sell-1", "Sell-3", "Hold-2", "Buy-5"]
-actionables = ["Missed Lead:1", "Potential Lead:2", "Completed:3", "Follow-up:4", "Lost Lead:5"]
+actionables = ["Missed Lead:1", "Potential Lead:2", "Completed:3", "Follow-up:4"]
 scores = ["Recommended", "Not Recommended"]
+activestatus = ['Online - MBOL', '4hrs ago', '4 days ago', '1 month ago']
+category = ['Citi Gold', 'Citi Private Bank', 'Citi Private Client']
 
 num_customers=100
 
@@ -46,8 +48,35 @@ def generate_sample(index):
         "overallCallQualityScore": np.random.randint(3, 10)*10
     }
 
+def generate_sample_customer_listing(index):
+    uuid_suffix = f"-{index:03d}"
+    return {
+        "UUID": f"CUS{faker.random_number(digits=5)}-30{uuid_suffix}",
+        "country": random.choice(countries),
+        "customerid": f"C{faker.random_number(digits=5)}",
+        "RelationshipID": f"R{faker.random_number(digits=4)}",
+        "Customername": faker.name(),
+        "mail" : faker.email(),
+        "phone" : faker.phone_number(),
+        "age" : faker.random_number(digits=2),
+        "id" : index,
+        "activestatus" : random.choice(activestatus),
+        "Quick Hint": random.choice(quick_hints),
+        "infer": random.choice(actionables),
+        "category" : random.choice(category),
+        "category-count" : faker.random_number(digits=1),
+        "Score": random.choice(scores),
+        "rmAdvisoryScore": np.random.randint(3, 10)*10,
+        "customerUnderstandingScore": np.random.randint(3, 10)*10,
+        "rmUnderstandingScore": np.random.randint(3, 10)*10,
+        "customerAppreciationValue": np.random.randint(3, 10)*10,
+        "rmKnowledgeScore": np.random.randint(3, 10)*10,
+        "overallCallQualityScore": np.random.randint(3, 10)*10
+    }
+
 # Generate 100 samples
 samples = [generate_sample(i) for i in range(num_customers)]
+samples_customer = [generate_sample_customer_listing(i) for i in range(1,10)]
 
 # Convert to JSON format for printing
 class DateTimeEncoder(json.JSONEncoder):
@@ -58,9 +87,10 @@ class DateTimeEncoder(json.JSONEncoder):
 
 
 samples_json = json.dumps(samples, indent=4, sort_keys=True, default=str)
+samples_customer_json = json.dumps(samples_customer, indent=4, sort_keys=True, default=str)
 
 # Print the generated samples
-print(samples_json)
+print(samples_customer)
 
 # If you want to save it to a file, you can uncomment the lines below:
 # with open('samples.json', 'w') as file:
