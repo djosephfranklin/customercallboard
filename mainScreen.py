@@ -11,10 +11,21 @@ import materialdashboard as md
 import dash_ag_grid as dag
 from dash import callback, ctx
 from dash.dependencies import Input, Output, State, ALL
+from PIL import Image
 import openai
 import plotly.graph_objects as go
 
-
+customers = [
+    {'country': 'us', 'name': 'Sarah Willie', 'category':'Citi Gold' ,
+     'phone' :'(850) 834-3764',
+     'mail' : 'sarahwillie@gmail.com',
+     'infer' : 'Missed',
+     'category-count': "1",
+     'activestatus' : 'Online - MBOL'},
+    {'country': 'uk', 'name': 'Wills Turner', 'category':'Citi Private Bank', 'category-count': "1", 'phone' :'(850) 834-3764', 'mail' : 'sarahwillie@gmail.com', 'infer' : 'Missed   ', 'activestatus' : '5hrs Ago     '},
+    {'country': 'it', 'name': 'Chris Lukash', 'category':'Citi Private Client','category-count': "2", 'phone' :'(850) 834-3764', 'mail' : 'sarahwillie@gmail.com', 'infer' : 'Potential', 'activestatus' : '10hrs Ago    '},
+    {'country': 'fr', 'name': 'Pilpe Mateos', 'category':'Citi Gold','category-count': "3", 'phone' :'(850) 834-3764', 'mail' : 'sarahwillie@gmail.com', 'infer' : 'Potential', 'activestatus' : '1 Month Ago  '},
+]
 @callback(
     Output("livetracker", "children"),
     [Input("analyse", "n_clicks"), Input("od", "n_clicks")]
@@ -268,7 +279,63 @@ def _make_grid_item(size) -> md.Grid:
         children=[_make_paper_item(f"{size[0]}", size[1])],
     )
 
+def _customer_list(customers: list) -> md.TableContainer:
+    return md.TableContainer(
+        children=[
+            md.Table(
+                style={"minWidth": "650"},
+                children=[
+            md.TableHead(
+                children=[
+                    md.TableRow(
+                        children=[
+                        md.TableCell("Country"),
+                        md.TableCell("Customer Name"),
+                        md.TableCell("Conduct Details"),
+                        md.TableCell("Last Conduct"),
+                        md.TableCell("Active Status"),
+                        md.TableCell("Actions")]
+                    )
+                ]
 
+            ),
+            md.TableBody(
+                children=[
+                    md.TableRow(
+                        children=[
+                        md.TableCell(md.Avatar(src="https://flagcdn.com/h20/"+customerinfo['country']+".png")),
+                        md.TableCell(
+                            children=[
+                            md.Typography(customerinfo['name'], style={'font-size' : '14px'}),
+                            #md.ListItemText(primary=customerinfo['name'],
+                            #                style={"padding-left": "20px"}, ),
+                            md.Chip(label=customerinfo['category'], style={'font-size' : '10px'}),
+                            md.Chip(label=customerinfo['category-count']+" - Relationships", style={'font-size' : '10px','padding-left':'4px'})
+                            ]
+                        ),
+                        md.TableCell(
+                            children=[
+                            md.Typography("Mobile: " +customerinfo['phone'], style={'font-size': '14px'}),
+                            md.Typography("Mail: " + customerinfo['mail'], style={'font-size': '14px'}),
+                            ]
+                        ),
+                        md.TableCell(
+                            md.Typography(customerinfo['infer'], style={'font-size': '14px'}),
+                            #md.ListItemText(secondary=customerinfo['infer'])
+                        ),
+                        md.TableCell(
+                            md.Typography(customerinfo['activestatus'], style={'font-size': '14px'}),
+                            #md.ListItemText(secondary=customerinfo['activestatus']),
+                        ),
+                    md.TableCell(
+                        md.Button("View Details")
+                    ) ]
+                    ) for customerinfo in customers
+                ]
+            )
+            ])
+        ]
+    )
 def _customer_view(text: str) -> md.Paper:
     return md.Paper(
         children=[md.Icon(), md.Typography("Customer 1"), md.Typography("Last Activity"), md.Typography("Status"),
@@ -352,18 +419,21 @@ app.layout = dbc.Container(
                  children=[
                      md.Grid(style={"flexGrow": "2"}, container=True, xs=12, children=[
                          md.Grid(item=True, xs=1, children=[
-                             md.Icon(className="bi bi-c-square-fill"),
+                             md.Icon(className="bi bi-c-square-fill", style={'height': '40px', 'color': '#FFFFFF'}),
                              # md.Typography("RM Conversation Dashbord", variant="h4", style={"width": "90%","color": "#3338FF"})
-                         ]),
+                         ], style={'max-width': '2.33333%'}),
                          md.Grid(item=True, xs=6, children=[
-                             md.Typography("RM Conversation Dashbord", variant="h4",
-                                           style={"width": "90%", "color": "#FFFFFF"})
+                             md.Typography("RM Calls Dashboard", variant="h6",
+                                           style={"width": "90%", "color": "#FFFFFF", 'text-align': 'left',
+                                                  'vertical-align': 'middle', 'padding-left': '10px',
+                                                  'font-size': '25px'})
                          ]),
                          md.Grid(item=True, xs=3, children=[
 
                          ]),
                          md.Grid(item=True, xs=1, children=[
-                             md.Avatar(children="SM", style={"bgcolor": "#3368FF", "float": "right", }),
+                             md.Avatar(src="https://flagcdn.com/h20/sg.png",
+                                       style={"bgcolor": "#3368FF", "float": "right", }),
                              md.Icon(className="bi bi-bell-fill", style={"color": "white", "height": "2em"})
                          ]),
                          md.Grid(item=True, xs=1, children=[
@@ -371,7 +441,7 @@ app.layout = dbc.Container(
                                      style={"color": "white", "float": "right", "height": "2em"}),
 
                          ]),
-                     ])], style={"background-color": "#1a3347", "padding": "10px", "height": "60px"}),
+                     ])], style={"background-color": "#1a3347", "padding": "10px", "height": "80px"}),
         md.Container(
             # The max width is specified as a screen size.
             maxWidth="xl",
@@ -399,46 +469,7 @@ app.layout = dbc.Container(
                         "backgroundColor": "#ffffff",
                     },
                     children=[
-                        md.Typography("Customer Base", variant="h5"),
-                        md.List(
-                            dense=True,
-                            children=[
-                                md.ListItem(
-                                    children=[
-                                        md.ListItemAvatar(children="SW", ),
-                                        md.ListItemText(primary="Sarah Willie", secondary="Citi Gold - Last Spoke Today 10:20 AM"),
-
-md.ListItemText(primary="Recommended", secondary="Citi Gold"),
-md.ListItemText(primary="Preferred", secondary="Citi Gold"),
-md.ListItemText(primary="Converted Investment", secondary="BUY"),
-                                        md.Button("View Details")]),
-                                md.ListItem(
-                                    children=[
-                                        md.ListItemAvatar(children="BI", ),
-                                        md.ListItemText(primary="BRUCE IVAN", secondary="Citi Gold"),
-
-                                        md.ListSubheader(children=[
-                                            md.Typography("Last Spoke by 12:10PM, Today", align="left",
-                                                          style={"backgroundColor": "#eeeeee"}, variant="h6")]),
-
-                                        # md.ListSubheader(children=[md.Typography("Potential Lead", align="left", variant="h6")]),
-                                        md.Button("Potential Lead")]),
-                                md.ListItem(
-                                    children=[
-                                        md.ListItemAvatar(children="KK", ),
-                                        md.ListItemText(primary="KARUP KUSMAN",
-                                                        secondary="Last Spoke by 11:23AM, Today"),
-                                        # md.ListSubheader(children=[md.Typography("Potential Lead", align="left", variant="h6")]),
-                                        md.Button("Missed Lead")]),
-                                md.ListItem(
-                                    children=[
-                                        md.ListItemAvatar(children="PE", ),
-                                        md.ListItemText(primary="PETER EPIC", secondary="Last Spoke by 10:00AM, Today"),
-                                        # md.ListSubheader(children=[md.Typography("Potential Lead", align="left", variant="h6")]),
-                                        md.Button("Potential Lead", style={"align": "left"})])
-                                # md.ListItemButton(placeholder="View Details")])
-                            ]
-                        )
+                        _customer_list(customers),
                     ]
                 )
             ],
