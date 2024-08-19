@@ -21,10 +21,11 @@ customers = [
      'mail' : 'sarahwillie@gmail.com',
      'infer' : 'Missed',
      'category-count': "1",
-     'activestatus' : 'Online - MBOL'},
-    {'country': 'uk', 'name': 'Wills Turner', 'category':'Citi Private Bank', 'category-count': "1", 'phone' :'(850) 834-3764', 'mail' : 'sarahwillie@gmail.com', 'infer' : 'Missed   ', 'activestatus' : '5hrs Ago     '},
-    {'country': 'it', 'name': 'Chris Lukash', 'category':'Citi Private Client','category-count': "2", 'phone' :'(850) 834-3764', 'mail' : 'sarahwillie@gmail.com', 'infer' : 'Potential', 'activestatus' : '10hrs Ago    '},
-    {'country': 'fr', 'name': 'Pilpe Mateos', 'category':'Citi Gold','category-count': "3", 'phone' :'(850) 834-3764', 'mail' : 'sarahwillie@gmail.com', 'infer' : 'Potential', 'activestatus' : '1 Month Ago  '},
+     'activestatus' : 'Online - MBOL',
+     "id":1},
+    {"id":2, 'country': 'hk', 'name': 'Wills Turner', 'category':'Citi Private Bank', 'category-count': "1", 'phone' :'(850) 834-3764', 'mail' : 'sarahwillie@gmail.com', 'infer' : 'Missed   ', 'activestatus' : '5hrs Ago     '},
+    {"id":3, 'country': 'it', 'name': 'Chris Lukash', 'category':'Citi Private Client','category-count': "2", 'phone' :'(850) 834-3764', 'mail' : 'sarahwillie@gmail.com', 'infer' : 'Potential', 'activestatus' : '10hrs Ago    '},
+    {"id":4, 'country': 'cn', 'name': 'Pilpe Mateos', 'category':'Citi Gold','category-count': "3", 'phone' :'(850) 834-3764', 'mail' : 'sarahwillie@gmail.com', 'infer' : 'Potential', 'activestatus' : '1 Month Ago  '},
 ]
 @callback(
     Output("livetracker", "children"),
@@ -53,6 +54,15 @@ def livetrackerupdate(n_clicks):
         return None
 
 
+@callback(
+    Output("dialog", "open"),
+    Input({"type":"viewdetail", "index":ALL}, "n_clicks"),
+)
+def dialogopen(n_click):
+    if isinstance(ctx.triggered_id, dict) and ctx.triggered_id["type"] == "viewdetail":
+        return True
+    else:
+        return False
 @callback(
     Output("popup", "open"),
     Input("od", "n_clicks")
@@ -328,7 +338,7 @@ def _customer_list(customers: list) -> md.TableContainer:
                             #md.ListItemText(secondary=customerinfo['activestatus']),
                         ),
                     md.TableCell(
-                        md.Button("View Details")
+                        md.Button("View Details", id={"type": "viewdetail", "index": customerinfo['id']})
                     ) ]
                     ) for customerinfo in customers
                 ]
@@ -473,6 +483,13 @@ app.layout = dbc.Container(
                     ]
                 )
             ],
+        ),
+        md.Dialog(
+            id="dialog",
+            open=False,
+            fullScreen=True,
+            fullWidth=True
+
         )
 
         # Header("RM Conversation Tracker", app, "1"),
