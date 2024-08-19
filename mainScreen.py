@@ -388,7 +388,7 @@ app.layout = dbc.Container(
                     # Row and column spacing can be set independently, or the `spacing` attribute can be used to set both.
                     rowSpacing=2,
                     columnSpacing=2,
-                    children=[_make_grid_item(s) for s in [("Total Customers:210",total_customer_img), ("Potential Leads:30",potential_leads_img), ("Missed Leads:10",missed_leads_img), ("Fulfilled:10",fullfiled_img)]]
+                    children=[_make_grid_item(s) for s in [("Total Customers:10",total_customer_img), ("Potential Leads:12",potential_leads_img), ("Missed Leads:5",missed_leads_img), ("Fulfilled:10",fullfiled_img)]]
 
                 ),
                 md.Paper(
