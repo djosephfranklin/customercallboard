@@ -398,7 +398,7 @@ def _customer_list(customers: list) -> md.TableContainer:
                 children=[
                     md.TableRow(
                         children=[
-                        md.TableCell(md.Avatar(src="https://flagcdn.com/h20/"+customerinfo['country']+".png")),
+                        md.TableCell(md.Avatar(src="https://flagcdn.com/h80/"+customerinfo['country']+".png")),
                         md.TableCell(md.Typography(customerinfo['customerid'], style={'font-size' : '14px'}),),
                         md.TableCell(
                             children=[
@@ -1113,7 +1113,7 @@ app.layout = dbc.Container(
 
                          ]),
                          md.Grid(item=True, xs=1, children=[
-                             md.Avatar(src="https://flagcdn.com/h20/sg.png",
+                             md.Avatar(src="https://flagcdn.com/h80/sg.png",
                                        style={"bgcolor": "#3368FF", "float": "right", }),
                              md.Icon(className="bi bi-bell-fill", style={"color": "white", "height": "2em"})
                          ]),
