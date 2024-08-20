@@ -21,7 +21,7 @@ from PIL import Image
 import openai
 import plotly.graph_objects as go
 
-customers = [{'UUID': 'CUS68725-30-001', 'country': 'us', 'customerid': 'C42484', 'RelationshipID': 'R1251', 'Customername': 'Samantha Hanson', 'mail': 'hernandezlinda@example.net', 'phone': '529-512-9991x3564', 'age': 90, 'id': 1, 'activestatus': '4hrs ago', 'Quick Hint': 'Buy-1', 'infer': 'Follow-up:4', 'category': 'Citi Private Client', 'category-count': 9, 'Score': 'Not Recommended', 'rmAdvisoryScore': 60, 'customerUnderstandingScore': 60, 'rmUnderstandingScore': 30, 'customerAppreciationValue': 80, 'rmKnowledgeScore': 60, 'overallCallQualityScore': 40}, {'UUID': 'CUS33429-30-002', 'country': 'au', 'customerid': 'C39568', 'RelationshipID': 'R3868', 'Customername': 'Laura Gallagher', 'mail': 'bryan54@example.org', 'phone': '3564672629', 'age': 74, 'id': 2, 'activestatus': '4 days ago', 'Quick Hint': 'Sell-1', 'infer': 'Follow-up:4', 'category': 'Citi Gold', 'category-count': 0, 'Score': 'Recommended', 'rmAdvisoryScore': 80, 'customerUnderstandingScore': 40, 'rmUnderstandingScore': 40, 'customerAppreciationValue': 50, 'rmKnowledgeScore': 50, 'overallCallQualityScore': 90}, {'UUID': 'CUS99399-30-003', 'country': 'in', 'customerid': 'C28212', 'RelationshipID': 'R4831', 'Customername': 'Scott Mclean', 'mail': 'barbaramora@example.com', 'phone': '578-290-0578x50263', 'age': 20, 'id': 3, 'activestatus': '4hrs ago', 'Quick Hint': 'Sell-1', 'infer': 'Missed Lead:1', 'category': 'Citi Private Client', 'category-count': 8, 'Score': 'Recommended', 'rmAdvisoryScore': 80, 'customerUnderstandingScore': 50, 'rmUnderstandingScore': 90, 'customerAppreciationValue': 30, 'rmKnowledgeScore': 50, 'overallCallQualityScore': 30}, {'UUID': 'CUS65572-30-004', 'country': 'jp', 'customerid': 'C17328', 'RelationshipID': 'R3063', 'Customername': 'Brian Parker', 'mail': 'benjamindelgado@example.net', 'phone': '9649240668', 'age': 11, 'id': 4, 'activestatus': '4 days ago', 'Quick Hint': 'Sell-3', 'infer': 'Missed Lead:1', 'category': 'Citi Private Bank', 'category-count': 5, 'Score': 'Recommended', 'rmAdvisoryScore': 60, 'customerUnderstandingScore': 80, 'rmUnderstandingScore': 80, 'customerAppreciationValue': 70, 'rmKnowledgeScore': 40, 'overallCallQualityScore': 40}, {'UUID': 'CUS16317-30-005', 'country': 'br', 'customerid': 'C18170', 'RelationshipID': 'R6019', 'Customername': 'Patricia Nichols', 'mail': 'upearson@example.com', 'phone': '001-972-229-0606x4397', 'age': 87, 'id': 5, 'activestatus': '4 days ago', 'Quick Hint': 'Hold-2', 'infer': 'Follow-up:4', 'category': 'Citi Private Bank', 'category-count': 3, 'Score': 'Recommended', 'rmAdvisoryScore': 40, 'customerUnderstandingScore': 60, 'rmUnderstandingScore': 40, 'customerAppreciationValue': 40, 'rmKnowledgeScore': 90, 'overallCallQualityScore': 60}, {'UUID': 'CUS66025-30-006', 'country': 'in', 'customerid': 'C39349', 'RelationshipID': 'R9905', 'Customername': 'Judy Davis', 'mail': 'stephenmiller@example.com', 'phone': '(884)413-4889', 'age': 4, 'id': 6, 'activestatus': '4hrs ago', 'Quick Hint': 'Hold-2', 'infer': 'Completed:3', 'category': 'Citi Private Client', 'category-count': 7, 'Score': 'Not Recommended', 'rmAdvisoryScore': 30, 'customerUnderstandingScore': 70, 'rmUnderstandingScore': 80, 'customerAppreciationValue': 60, 'rmKnowledgeScore': 30, 'overallCallQualityScore': 60}, {'UUID': 'CUS76420-30-007', 'country': 'it', 'customerid': 'C92396', 'RelationshipID': 'R3503', 'Customername': 'Sarah Ponce', 'mail': 'dmartin@example.org', 'phone': '+1-528-571-9211x95903', 'age': 26, 'id': 7, 'activestatus': '4hrs ago', 'Quick Hint': 'Sell-3', 'infer': 'Potential Lead:2', 'category': 'Citi Private Bank', 'category-count': 0, 'Score': 'Recommended', 'rmAdvisoryScore': 30, 'customerUnderstandingScore': 90, 'rmUnderstandingScore': 70, 'customerAppreciationValue': 50, 'rmKnowledgeScore': 70, 'overallCallQualityScore': 80}, {'UUID': 'CUS99309-30-008', 'country': 'br', 'customerid': 'C20109', 'RelationshipID': 'R9996', 'Customername': 'Brenda Jefferson', 'mail': 'iadams@example.net', 'phone': '435-701-7517x80133', 'age': 51, 'id': 8, 'activestatus': '4 days ago', 'Quick Hint': 'Buy-5', 'infer': 'Missed Lead:1', 'category': 'Citi Private Bank', 'category-count': 9, 'Score': 'Not Recommended', 'rmAdvisoryScore': 60, 'customerUnderstandingScore': 70, 'rmUnderstandingScore': 60, 'customerAppreciationValue': 80, 'rmKnowledgeScore': 30, 'overallCallQualityScore': 60}, {'UUID': 'CUS79649-30-009', 'country': 'us', 'customerid': 'C63542', 'RelationshipID': 'R112', 'Customername': 'Brenda Castillo', 'mail': 'tina13@example.net', 'phone': '001-811-967-6471x726', 'age': 12, 'id': 9, 'activestatus': 'Online - MBOL', 'Quick Hint': 'Sell-3', 'infer': 'Potential Lead:2', 'category': 'Citi Private Bank', 'category-count': 3, 'Score': 'Recommended', 'rmAdvisoryScore': 80, 'customerUnderstandingScore': 50, 'rmUnderstandingScore': 60, 'customerAppreciationValue': 80, 'rmKnowledgeScore': 30, 'overallCallQualityScore': 70}]
+customers = [{'UUID': 'CUS68725-30-001', 'country': 'us', 'customerid': 'C42484', 'RelationshipID': 'R1251', 'Customername': 'Samantha Hanson', 'mail': 'hernandezlinda@example.net', 'phone': '529-512-9991x3564', 'age': 90, 'id': 1, 'activestatus': '4hrs ago', 'Quick Hint': 'Buy-1', 'infer': 'Follow-up:4', 'category': 'Citi Private Client', 'category-count': 9, 'Score': 'Not Recommended', 'rmAdvisoryScore': 60, 'customerUnderstandingScore': 60, 'rmUnderstandingScore': 30, 'customerAppreciationValue': 80, 'rmKnowledgeScore': 60, 'overallCallQualityScore': 40}, {'UUID': 'CUS33429-30-002', 'country': 'au', 'customerid': 'C39568', 'RelationshipID': 'R3868', 'Customername': 'Laura Gallagher', 'mail': 'bryan54@example.org', 'phone': '3564672629', 'age': 74, 'id': 2, 'activestatus': '4 days ago', 'Quick Hint': 'Sell-1', 'infer': 'Follow-up:4', 'category': 'Citi Gold', 'category-count': 0, 'Score': 'Recommended', 'rmAdvisoryScore': 80, 'customerUnderstandingScore': 40, 'rmUnderstandingScore': 40, 'customerAppreciationValue': 50, 'rmKnowledgeScore': 50, 'overallCallQualityScore': 90}, {'UUID': 'CUS99399-30-003', 'country': 'in', 'customerid': 'C28212', 'RelationshipID': 'R4831', 'Customername': 'Scott Mclean', 'mail': 'barbaramora@example.com', 'phone': '578-290-0578x50263', 'age': 60, 'id': 3, 'activestatus': '4hrs ago', 'Quick Hint': 'Sell-1', 'infer': 'Missed Lead:1', 'category': 'Citi Private Client', 'category-count': 8, 'Score': 'Recommended', 'rmAdvisoryScore': 80, 'customerUnderstandingScore': 50, 'rmUnderstandingScore': 90, 'customerAppreciationValue': 30, 'rmKnowledgeScore': 50, 'overallCallQualityScore': 30}, {'UUID': 'CUS65572-30-004', 'country': 'jp', 'customerid': 'C17328', 'RelationshipID': 'R3063', 'Customername': 'Brian Parker', 'mail': 'benjamindelgado@example.net', 'phone': '9649240668', 'age': 31, 'id': 4, 'activestatus': '4 days ago', 'Quick Hint': 'Sell-3', 'infer': 'Missed Lead:1', 'category': 'Citi Private Bank', 'category-count': 5, 'Score': 'Recommended', 'rmAdvisoryScore': 60, 'customerUnderstandingScore': 80, 'rmUnderstandingScore': 80, 'customerAppreciationValue': 70, 'rmKnowledgeScore': 40, 'overallCallQualityScore': 40}, {'UUID': 'CUS16317-30-005', 'country': 'br', 'customerid': 'C18170', 'RelationshipID': 'R6019', 'Customername': 'Patricia Nichols', 'mail': 'upearson@example.com', 'phone': '001-972-229-0606x4397', 'age': 87, 'id': 5, 'activestatus': '4 days ago', 'Quick Hint': 'Hold-2', 'infer': 'Follow-up:4', 'category': 'Citi Private Bank', 'category-count': 3, 'Score': 'Recommended', 'rmAdvisoryScore': 40, 'customerUnderstandingScore': 60, 'rmUnderstandingScore': 40, 'customerAppreciationValue': 40, 'rmKnowledgeScore': 90, 'overallCallQualityScore': 60}, {'UUID': 'CUS66025-30-006', 'country': 'in', 'customerid': 'C39349', 'RelationshipID': 'R9905', 'Customername': 'Judy Davis', 'mail': 'stephenmiller@example.com', 'phone': '(884)413-4889', 'age': 54, 'id': 6, 'activestatus': '4hrs ago', 'Quick Hint': 'Hold-2', 'infer': 'Completed:3', 'category': 'Citi Private Client', 'category-count': 7, 'Score': 'Not Recommended', 'rmAdvisoryScore': 30, 'customerUnderstandingScore': 70, 'rmUnderstandingScore': 80, 'customerAppreciationValue': 60, 'rmKnowledgeScore': 30, 'overallCallQualityScore': 60}, {'UUID': 'CUS76420-30-007', 'country': 'it', 'customerid': 'C92396', 'RelationshipID': 'R3503', 'Customername': 'Sarah Ponce', 'mail': 'dmartin@example.org', 'phone': '+1-528-571-9211x95903', 'age': 26, 'id': 7, 'activestatus': '4hrs ago', 'Quick Hint': 'Sell-3', 'infer': 'Potential Lead:2', 'category': 'Citi Private Bank', 'category-count': 0, 'Score': 'Recommended', 'rmAdvisoryScore': 30, 'customerUnderstandingScore': 90, 'rmUnderstandingScore': 70, 'customerAppreciationValue': 50, 'rmKnowledgeScore': 70, 'overallCallQualityScore': 80}, {'UUID': 'CUS99309-30-008', 'country': 'br', 'customerid': 'C20109', 'RelationshipID': 'R9996', 'Customername': 'Brenda Jefferson', 'mail': 'iadams@example.net', 'phone': '435-701-7517x80133', 'age': 51, 'id': 8, 'activestatus': '4 days ago', 'Quick Hint': 'Buy-5', 'infer': 'Missed Lead:1', 'category': 'Citi Private Bank', 'category-count': 9, 'Score': 'Not Recommended', 'rmAdvisoryScore': 60, 'customerUnderstandingScore': 70, 'rmUnderstandingScore': 60, 'customerAppreciationValue': 80, 'rmKnowledgeScore': 30, 'overallCallQualityScore': 60}, {'UUID': 'CUS79649-30-009', 'country': 'us', 'customerid': 'C63542', 'RelationshipID': 'R112', 'Customername': 'Brenda Castillo', 'mail': 'tina13@example.net', 'phone': '001-811-967-6471x726', 'age': 31, 'id': 9, 'activestatus': 'Online - MBOL', 'Quick Hint': 'Sell-3', 'infer': 'Potential Lead:2', 'category': 'Citi Private Bank', 'category-count': 3, 'Score': 'Recommended', 'rmAdvisoryScore': 80, 'customerUnderstandingScore': 50, 'rmUnderstandingScore': 60, 'customerAppreciationValue': 80, 'rmKnowledgeScore': 30, 'overallCallQualityScore': 70}]
 
 
 dummt = [
@@ -38,7 +38,7 @@ dummt = [
 ]
 
 sample_transcript = """
-{"uuid": "f8a6b2b1-73e9-4512-b7f7-92b53425084f", "transcripted": "Speaker 2: Good morning, Sarah. How can I assist you today?\nSpeaker 1: Hey Samantha. I'm interested in exploring investment options, but I'm more comfortable with bonds.\nSpeaker 2: I understand bonds are a safe choice, but have you considered diversifying your portfolio with a mutual fund? We have a solid mutual fund low-volatility Equity portfolio that offers High returns and quarterly dividends. It has a 70% spread in the US Equity market and 30% in fixed-income. It has been performing well in the market for a long time and it's a good fun to start investing.\nSpeaker 1: I'm not sure about mutual funds. I've always preferred bonds because they feel safer to me\nSpeaker 2: While bonds are safe. Your portfolio is already heavily invested in them diversifying with this mutual fund could balance your Investments and potentially yield higher returns the US market portion provides growth potential while the fixed-income part offers stability. \nSpeaker 1: I see the point But I'll have to think about it Mom's just feel more secure to me.\nSpeaker 2: I understand it's important to feel secure in your Investments take your time. But remember that diversifying can protect your portfolio from Market volatility and enhance overall returns if you have any questions or need more information, I'm here to help.", "score": "20%", "scoreReason": "The banker is recommending and not enforcing client to invest in Mutual Funds. Words like 'consider' and 'could' indicates a recommendation tone.", "actionable": "Potential Lead", "clientRequested": "BND:Bonds:BUY:", "orderarray": [{"productType": "MF", "productName": "low-volatility Equity portfolio", "amount": ""}],"customerAppreciationValue": 30, "customerUnderstandingScore": 30, "overallCallQualityScore": 50, "rmAdvisoryScore": 70, "rmKnowledgeScore": 60, "rmUnderstandingScore": 70}
+{"uuid": "f8a6b2b1-73e9-4512-b7f7-92b53425084f", "transcripted": "Speaker 2: Good morning, Sarah. How can I assist you today?\nSpeaker 1: Hey Samantha. I'm interested in exploring investment options, but I'm more comfortable with bonds.\nSpeaker 2: I understand bonds are a safe choice, but have you considered diversifying your portfolio with a mutual fund? We have a solid mutual fund low-volatility Equity portfolio that offers High returns and quarterly dividends. It has a 70% spread in the US Equity market and 30% in fixed-income. It has been performing well in the market for a long time and it's a good fun to start investing.\nSpeaker 1: I'm not sure about mutual funds. I've always preferred bonds because they feel safer to me\nSpeaker 2: While bonds are safe. Your portfolio is already heavily invested in them diversifying with this mutual fund could balance your Investments and potentially yield higher returns the US market portion provides growth potential while the fixed-income part offers stability. \nSpeaker 1: I see the point But I'll have to think about it Bonds just feel more secure to me.\nSpeaker 2: I understand it's important to feel secure in your Investments take your time. But remember that diversifying can protect your portfolio from Market volatility and enhance overall returns if you have any questions or need more information, I'm here to help.", "score": "20%", "scoreReason": "The banker is recommending and not enforcing client to invest in Mutual Funds. Words like 'consider' and 'could' indicates a recommendation tone.", "actionable": "Potential Lead", "clientRequested": "BND:Bonds:BUY:", "orderarray": [{"productType": "MF", "productName": "low-volatility Equity portfolio", "amount": ""}],"customerAppreciationValue": 30, "customerUnderstandingScore": 30, "overallCallQualityScore": 50, "rmAdvisoryScore": 70, "rmKnowledgeScore": 60, "rmUnderstandingScore": 70}
 """
 
 generation_config = {
@@ -53,7 +53,7 @@ safety_settings = {
     generative_models.HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: generative_models.HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
     generative_models.HarmCategory.HARM_CATEGORY_HARASSMENT: generative_models.HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
 }
-
+progress_value=0
 
 @callback(
     Output("dialog", "open"),
@@ -80,51 +80,130 @@ def openPopUp(n_clicks):
         return False
 
 
-def score(scoreValue):
-    score = int(scoreValue.strip('%'))
-    scoreValue = score
-    fig = go.Figure(go.Indicator(
-        domain={'x': [0, 1], 'y': [0, 1]},
-        value=scoreValue,
-        mode="gauge+number+delta",
-        title={'text': "Enforcement Score"},
-        gauge={'axis': {'range': [None, 100]},
-               'steps': [
-                   {'range': [0, 40], 'color': "green"},
-                   {'range': [40, 60], 'color': "yellow"},
-                   {'range': [60, 100], 'color': "red"}],
-               'threshold': {'line': {'color': "red", 'width': 4}, 'thickness': 0.75, 'value': scoreValue}}))
+def score(rmAdvisoryScore,customerUnderstandingScore,rmUnderstandingScore,customerAppreciationValue,rmKnowledgeScore,overallCallQualityScore):
+    scores = {
+        'rmAdvisoryScore': rmAdvisoryScore,
+        'customerUnderstandingScore': customerUnderstandingScore,
+        'rmUnderstandingScore': rmUnderstandingScore,
+        'customerAppreciationValue': customerAppreciationValue,
+        'rmKnowledgeScore': rmKnowledgeScore,
+        'overallCallQualityScore': overallCallQualityScore
+    }
+
+    # Define categories and values
+    categories = list(scores.keys())
+    values = list(scores.values())
+    values.append(values[0])
+    categories.append(categories[0])
+    # Create the radar chart
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatterpolar(
+        r=values,
+        theta=categories,
+        fill='toself',
+        name='Call Quality Scores'
+    ))
+
+    fig.update_layout(
+        polar=dict(
+            radialaxis=dict(
+                visible=True,
+                range=[0, 100]
+            )),
+        showlegend=False
+    )
+
     return fig
 
 
-def livetracker(transcript):
+# def livetracker(transcript):
+#     encoded_image = base64.b64encode(open('assets/mic.svg', 'rb').read()).decode()
+#     # transcript['transcripted'].replace( /(?:\r\n|\r|\n)/g, '<br>')
+#
+#     conversations = str(transcript['transcripted']).split("\n")
+#
+#     transcript_ = md.Paper(elevation=3, style={"position": "relative", "width": "auto", "height": "280px"}, children=[
+#         # {"uuid":"", "transcripted" : "", "score":"", "actionable" :"", "orderarray" : ""},
+#
+#         md.Typography("UUID: " + transcript['uuid'], style={"padding": "20px"}),
+#
+#         md.Card(children=[md.Typography(conversation) for conversation in conversations],
+#                 style={"padding-top": "10px", "padding-bottom": "10px", 'maxHeight': '60%', 'overflow': 'auto'}),
+#         md.Icon(className="bi bi-mic-fill"),
+#
+#         # md.TableContainer(children=[
+#         #     md.TableHead(transcript['uuid'], style={"padding":"2px"}),
+#         #     md.TableBody(children=[md.TableRow(transcript['transcripted'], style={"padding":"2px", 'maxHeight': '40px', 'overflow': 'auto'}),
+#         #                            ]),
+#         #     md.TableFooter(
+#         #         html.Img(src="data:image/png;base64,{}".format(encoded_image), height="2rem", width="auto"))
+#         # ])
+#     ])
+#     # logo = md.TableContainer(children=[md.TableRow(children=[md.TableCell(style={"background-color": "green"}, height="10px", width="20px"), md.TableCell(children=[md.Icon(className="bi bi-record2", style={"color":"black"})],style={"background-color": "yellow"}, height="10px", width="20px"), md.TableCell(style={"background-color": "red"}, height="10px", width="20px")])])
+#     return dbc.Row([dbc.Col(md.Paper(dcc.Graph(style={"position": "relative", "width": "280px", "height": "280px"},
+#                                                figure=score(transcript['score'])), elevation=3), md=3),
+#                     dbc.Col(transcript_, md=9)])
+
+def parse_conversations(conversations):
+    parsed_conversations = []
+    for line in conversations:
+        if ": " in line:
+            speaker, text = line.split(": ", 1)
+            parsed_conversations.append({"Speaker": speaker, "text": text})
+    return parsed_conversations
+def livetracker( transcript):
     encoded_image = base64.b64encode(open('assets/mic.svg', 'rb').read()).decode()
-    # transcript['transcripted'].replace( /(?:\r\n|\r|\n)/g, '<br>')
 
-    conversations = str(transcript['transcripted']).split("\n")
+    transcript = transcript.replace("json", "").replace("`","")
+    print(transcript)
+    transcript = json.loads(transcript, strict=False)
 
-    transcript_ = md.Paper(elevation=3, style={"position": "relative", "width": "auto", "height": "280px"}, children=[
-        # {"uuid":"", "transcripted" : "", "score":"", "actionable" :"", "orderarray" : ""},
+    conversations = transcript['transcripted'].split("\n")
+    parsed_conversations = parse_conversations(conversations)
 
-        md.Typography("UUID: " + transcript['uuid'], style={"padding": "20px"}),
-
-        md.Card(children=[md.Typography(conversation) for conversation in conversations],
-                style={"padding-top": "10px", "padding-bottom": "10px", 'maxHeight': '60%', 'overflow': 'auto'}),
-        md.Icon(className="bi bi-mic-fill"),
-
-        # md.TableContainer(children=[
-        #     md.TableHead(transcript['uuid'], style={"padding":"2px"}),
-        #     md.TableBody(children=[md.TableRow(transcript['transcripted'], style={"padding":"2px", 'maxHeight': '40px', 'overflow': 'auto'}),
-        #                            ]),
-        #     md.TableFooter(
-        #         html.Img(src="data:image/png;base64,{}".format(encoded_image), height="2rem", width="auto"))
-        # ])
+    print(parsed_conversations)
+    chat_display = [create_chat_bubble(conv["Speaker"], conv["text"]) for conv in parsed_conversations]
+    transcript_ = md.Paper(elevation=4, style={"position": "relative", "width": "300","height": "500px"}, children=[
+        md.Typography("Google's Transcripted Text: UUID"+transcript['uuid'], style={"padding":"20px"}),
+        dbc.Container(
+            dbc.Card(
+                dbc.CardBody(chat_display),
+                style={"padding": "10px", "background-color": "#f7f7f7", "border-radius": "10px", "margin-top": "20px",'maxHeight': '400px', 'overflow': 'auto'}
+            ),
+            fluid=True
+        )
+        # md.Card(children=[md.Typography(conversation) for conversation in conversations], style={"padding-top":"10px", "padding-bottom": "10px",  "padding-left": "20px",  'maxHeight': '100%', 'overflow': 'auto'}),
+        # md.Icon(className="bi bi-mic-fill"),
     ])
-    # logo = md.TableContainer(children=[md.TableRow(children=[md.TableCell(style={"background-color": "green"}, height="10px", width="20px"), md.TableCell(children=[md.Icon(className="bi bi-record2", style={"color":"black"})],style={"background-color": "yellow"}, height="10px", width="20px"), md.TableCell(style={"background-color": "red"}, height="10px", width="20px")])])
-    return dbc.Row([dbc.Col(md.Paper(dcc.Graph(style={"position": "relative", "width": "280px", "height": "280px"},
-                                               figure=score(transcript['score'])), elevation=3), md=3),
-                    dbc.Col(transcript_, md=9)])
+    return dbc.Row([ dbc.Col(md.Paper(dcc.Graph(style={"position": "relative", "width": "450px","height": "500px"}, figure=score(transcript["rmAdvisoryScore"],transcript["customerUnderstandingScore"],transcript["rmUnderstandingScore"],transcript["customerAppreciationValue"],transcript["rmKnowledgeScore"],transcript["overallCallQualityScore"])), elevation=5), md=5),dbc.Col(transcript_, md=7)])
 
+
+def create_chat_bubble(speaker, text):
+    if speaker == "Speaker 1":
+        return dbc.Row(
+            dbc.Col(
+                html.Div([
+                    html.Strong(speaker, style={"color": "blue"}),
+                    html.P(text, style={"margin": 0})
+                ], style={"background-color": "#e1f5fe", "padding": "10px", "border-radius": "10px",
+                          "max-width": "70%"}),
+                width={"size": 10, "offset": 0},
+                style={"margin-top": "10px"}
+            )
+        )
+    else:
+        return dbc.Row(
+            dbc.Col(
+                html.Div([
+                    html.Strong(speaker, style={"color": "green"}),
+                    html.P(text, style={"margin": 0})
+                ], style={"background-color": "#e8f5e9", "padding": "10px", "border-radius": "10px",
+                          "max-width": "70%", "margin-left": "auto"}),
+                width={"size": 10, "offset": 2},
+                style={"margin-top": "10px"}
+            )
+        )
 
 def Header(name, app, id):
     title = html.H4(name, style={"margin-top": 5, "padding-top": "10px"})
@@ -1086,6 +1165,9 @@ app.layout = dbc.Container(
 dbc.Container(
     fluid=True,
     children=[
+        md.DialogActions(
+                        md.Button("Close", id="close")
+                      ),
         #header_component("RM Dashboard", "1"),
         html.Hr(),
         header_component("Customer Conversation Portal", "4"),
@@ -1102,9 +1184,7 @@ dbc.Container(
     ],
 )
                       ]),
-                      md.DialogActions(
-                        md.Button("Close", id="close")
-                      )]
+                      ]
 
         )
 
@@ -1165,7 +1245,7 @@ def update_components(n_clicks, n_intervals, n_clicks1):
         # Handle progress updates
         if n_intervals is not None:
             if progress_value >= 100:
-                return True, 0, 100, livetracker(transcript), None, False  # Re-enable the button when complete
+                return True, 0, 100, livetracker(transcript), None, False
             progress_value += 40  # Update progress value
             return False, n_intervals, progress_value, "Processing...", None, True
 
